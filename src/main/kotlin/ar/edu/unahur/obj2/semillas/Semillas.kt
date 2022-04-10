@@ -1,37 +1,105 @@
 package ar.edu.unahur.obj2.semillas
 
-class Menta(var altura: Double, val anioSemilla: Int) {
-    fun espacio(): Double {
-        TODO("Te la debo, amigue...")
+fun main() {
+
+}
+
+abstract class Planta(open var altura: Double, open val anioSemilla: Int) {
+    /*
+    ASIGNAR VARIABLES
+    1)
+    init {
+        this.altura = altura
+        this.anioSemilla = anioSemilla
+    }
+    2)
+    var alturaPlanta: Double = altura
+    var anioSemillaPlanta: Int = anioSemilla
+    */
+
+    fun alturaPlanta() : Double {
+        return altura
     }
 
-    fun daSemillas(): Boolean {
-        TODO("Colgue, che...")
+    fun anioObtencionSemilla() : Int {
+        return anioSemilla
     }
 
-    fun esFuerte(): Boolean {
-        TODO("Estas seguro que lo queres implementar así?")
+    open fun horasDeSolToleradas() : Int {
+        return 7
+    }
+
+    open fun esFuerte() : Boolean {
+        return this.horasDeSolToleradas() > 10
+    }
+
+    open fun daNuevasSemillas() : Boolean {
+        return this.esFuerte()
+    }
+
+    abstract fun espacioQueOcupa() : Double
+
+}
+
+open class Menta(override var altura: Double, override val anioSemilla: Int) : Planta(altura, anioSemilla) {
+
+    override fun daNuevasSemillas() : Boolean {
+        return super.daNuevasSemillas() || altura > 0.4
+    }
+
+    override fun espacioQueOcupa() : Double {
+        return altura + 1
+    }
+}
+
+
+
+open class Soja(override var altura: Double, override val anioSemilla: Int) : Planta(altura, anioSemilla) {
+
+    override fun horasDeSolToleradas(): Int {
+        return if (altura < 0.5) {6} else if (altura in 0.5..1.0) {8} else {12}
+    }
+
+    override fun daNuevasSemillas(): Boolean {
+        return super.daNuevasSemillas() || (anioSemilla > 2007 && altura in 0.75..0.9)
+    }
+
+    override fun espacioQueOcupa(): Double {
+        return altura / 2
+    }
+}
+
+class Quinoa(override var altura: Double, override val anioSemilla: Int, var espacioQueOcupa: Double) : Planta(altura, anioSemilla) {
+
+    override fun espacioQueOcupa(): Double {
+        return espacioQueOcupa
+    }
+
+    override fun horasDeSolToleradas(): Int {
+        return if (espacioQueOcupa < 0.3) {10} else (super.horasDeSolToleradas())
+    }
+
+    override fun daNuevasSemillas(): Boolean {
+        return super.daNuevasSemillas() || anioSemilla in 2001..2008
+    }
+}
+
+// 2* Transgénico
+
+class SojaTransgenica(override var altura: Double, override val anioSemilla: Int) : Soja(altura, anioSemilla) {
+
+    override fun daNuevasSemillas(): Boolean {
+        return false
+    }
+}
+
+class Peperina(override var altura: Double, override val anioSemilla: Int) : Menta(altura, anioSemilla) {
+
+    override fun espacioQueOcupa(): Double {
+        return super.espacioQueOcupa() * 2
     }
 
 }
 
-class Soja(var altura: Double, val anioSemilla: Int) {
-    fun espacio(): Double {
-        TODO("Lee un poco más el enunciado...")
-    }
 
-    fun daSemillas(): Boolean {
-        TODO("Dalee")
-    }
 
-    fun esFuerte(): Boolean {
-        TODO("Así me implementas mejor")
-    }
-}
-
-class Planta(var altura: Double, val anioSemilla: Int) {
-    fun espacio() {
-        TODO("Pasaron cosas")
-    }
-
-}
