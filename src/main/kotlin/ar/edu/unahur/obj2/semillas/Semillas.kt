@@ -39,6 +39,12 @@ abstract class Planta(open var altura: Double, open val anioSemilla: Int) {
 
     abstract fun espacioQueOcupa() : Double
 
+    abstract fun esParcelaIdeal(parcela : Parcela) : Boolean
+
+    fun seAsociaBien(parcela : Parcela) : Boolean {
+        return parcela.seAsociaBien(this)
+    }
+
 }
 
 open class Menta(override var altura: Double, override val anioSemilla: Int) : Planta(altura, anioSemilla) {
@@ -49,6 +55,10 @@ open class Menta(override var altura: Double, override val anioSemilla: Int) : P
 
     override fun espacioQueOcupa() : Double {
         return altura + 1
+    }
+
+    override fun esParcelaIdeal(parcela : Parcela) : Boolean {
+        return parcela.superficie() > 6
     }
 }
 
@@ -67,9 +77,13 @@ open class Soja(override var altura: Double, override val anioSemilla: Int) : Pl
     override fun espacioQueOcupa(): Double {
         return altura / 2
     }
+
+    override fun esParcelaIdeal(parcela : Parcela) : Boolean {
+        return parcela.horasDeSol() == this.horasDeSolToleradas()
+    }
 }
 
-class Quinoa(override var altura: Double, override val anioSemilla: Int, var espacioQueOcupa: Double) : Planta(altura, anioSemilla) {
+class Quinoa(override var altura: Double, override val anioSemilla: Int, private var espacioQueOcupa: Double) : Planta(altura, anioSemilla) {
 
     override fun espacioQueOcupa(): Double {
         return espacioQueOcupa
@@ -82,6 +96,10 @@ class Quinoa(override var altura: Double, override val anioSemilla: Int, var esp
     override fun daNuevasSemillas(): Boolean {
         return super.daNuevasSemillas() || anioSemilla in 2001..2008
     }
+
+    override fun esParcelaIdeal(parcela: Parcela): Boolean {
+        return parcela.plantasEnParcela().all{ planta -> planta.alturaPlanta() <= 1.5 }
+    }
 }
 
 // 2* Transgénico
@@ -91,6 +109,10 @@ class SojaTransgenica(override var altura: Double, override val anioSemilla: Int
     override fun daNuevasSemillas(): Boolean {
         return false
     }
+
+    override fun esParcelaIdeal(parcela: Parcela): Boolean {
+        return parcela.cantidadMaximaDePlantas() == 1
+    }
 }
 
 class Peperina(override var altura: Double, override val anioSemilla: Int) : Menta(altura, anioSemilla) {
@@ -99,6 +121,7 @@ class Peperina(override var altura: Double, override val anioSemilla: Int) : Men
         return super.espacioQueOcupa() * 2
     }
 
+    // parcela ideal -> hereda de Menta
 }
 
 
